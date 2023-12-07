@@ -1,0 +1,23 @@
+{
+    "manifest_version": 3,
+    "name": "Nextfit Central",
+    "description": "Extensão para pesquisas na central de ajuda",
+    "version": "1.0",
+    "icons": {
+      "48": "logonextfit.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["https://sistemanextfit.freshchat.com/*"],
+        "js": ["script.js"],
+        "css": ["style.css"]
+      }
+    ],
+    "action": {
+      "default_icon": "logonextfit.png",
+      "default_popup": "index.html"
+    },
+    "permissions": ["activeTab"]
+}
+
+  
