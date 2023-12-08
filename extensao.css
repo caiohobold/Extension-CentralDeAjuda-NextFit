@@ -65,7 +65,7 @@ body{
     margin-top: 12px;
 }
 
-.loader {
+#loaders {
     border: 2px solid #f3f3f3; /* Light gray */
     border-top: 2.5px solid rgb(163, 0, 163); /* Blue */
     border-radius: 50%;

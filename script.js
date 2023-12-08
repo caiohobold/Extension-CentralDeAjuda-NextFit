@@ -1,7 +1,6 @@
 //https://ajuda.nextfit.com.br/support/search/solutions?term=
 const container = document.getElementById('container');
 const btn = document.getElementById('buttonPesquisa');
-const redirectPage = document.getElementById('redirectPage');
 
 function copyToClipboard(text) {
     const tempElement = document.createElement('textarea');
@@ -19,7 +18,7 @@ function copyToClipboard(text) {
 
 
 function toggleLoading() {
-    var loader = document.getElementById('loader');
+    var loader = document.getElementById('loaders');
     loader.style.display = (loader.style.display === 'block') ? 'none' : 'block';
 
     if (loader.style.display === 'block') {
@@ -113,8 +112,9 @@ function criaDiv(){
                         container.appendChild(btn)
 
                     })
-                    
-                    btn.remove();
+                    if(btn){
+                        btn.remove();
+                    }
                     
                 })              
             })
