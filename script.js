@@ -1,7 +1,14 @@
-//https://ajuda.nextfit.com.br/support/search/solutions?term=
 const container = document.getElementById('container');
 const btn = document.getElementById('buttonPesquisa');
 
+chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.create({ 
+        url: 'https://ajuda.nextfit.com.br/support/solutions',
+        active: false 
+    });
+});
+
+//Função qie cola o texto do parâmetro para a clipboard
 function copyToClipboard(text) {
     const tempElement = document.createElement('textarea');
     tempElement.value = text;
@@ -11,12 +18,7 @@ function copyToClipboard(text) {
     document.body.removeChild(tempElement);
 }
 
-//const relative = redirectPage.getAttribute('href');
-//const absolute = new URL(relative, "app.nextfit.com.br");
-
-//redirectPage.innerHTML = `<a target="_blank" id="redirectPage" href="${absolute}"><img src="logonextfit.png" id="logoNextFit" alt=""></a>`
-
-
+//Função para mostrar ou não o ícone de Loading
 function toggleLoading() {
     var loader = document.getElementById('loaders');
     loader.style.display = (loader.style.display === 'block') ? 'none' : 'block';
@@ -28,31 +30,58 @@ function toggleLoading() {
     }
 }
 
+
+//Função que cria a div com os resultados da pesquisa
 function criaDiv(){
-    setTimeout(toggleLoading(), 3200);
     const searchInput = document.getElementById('searchInput').value;
     if(searchInput.trim() !== ''){
+
+        //Corta tudo que for "espaços da pesquisa e troca para um símbolo de '+'"
         const palavras = searchInput.split(' ');
         const fraseComMais = palavras.join('+');
+
+        //Forma o link formatado da maneira correta para pesquisa
         const searchUrl = "https://ajuda.nextfit.com.br/support/search/solutions?term=" + fraseComMais;
         
-        fetch(searchUrl)
-            .then(Response => Response .text())
+
+
+        //Faz um fetch para o link personalizado.
+        fetch("https://ajuda.nextfit.com.br/support/search/solutions", {
+            method: 'GET',
+            headers: {
+                'Access-Control-Allow-Origin': 'chrome-extension://gjkkanjnofbfcpidlobkjlnknfjjmjcn',
+                'Origin': 'chrome-extension://gcbcddmlplilinibipldbgilbbpkddpd'
+            }
+        })
+            .then(response => {
+                console.log('Status da resposta:', response.status);
+                if (response.ok) {
+                    return response.text();
+                  } else {
+                    throw new Error('Não foi possível acessar o corpo da resposta');
+                  }})
             .then(html => {
+                console.log('HTML recebido:', html);
+                //Cria uma div
                 const tempElement = document.createElement('div');
                 tempElement.innerHTML = html;
 
+                //Pega todos os artigos com a classe ".fw-articles li"
                 const articles = tempElement.querySelectorAll('.fw-articles li');
 
+                //Remove o botão "Pesquisar"
                 const removeSearch = document.createElement('div');
                 removeSearch.className = 'close-icon';
                 container.appendChild(removeSearch);
 
-
+                //Para cada artigo encontrado no fetch, ele vai fazer o seguinte:
                 articles.forEach(article => {
+                    //Pegou o link do artigo na pesquisa
                     const linkElement = article.querySelector('a');
+                    //Pegou o título do artigo na pesquisa
                     const titleElement = article.querySelector('p');
 
+                    //Clona o nó do titleElement pra poder utilizar com mais flexibilidade.
                     const titleClone = titleElement.cloneNode(true);
 
                     titleClone.querySelectorAll('span.ms-4.fw-status-badge.fw-status-badge__best-answer').forEach(span => span.remove());

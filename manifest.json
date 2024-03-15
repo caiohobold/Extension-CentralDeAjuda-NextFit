@@ -1,22 +1,41 @@
 {
-    "manifest_version": 3,
-    "name": "Nextfit Central",
-    "description": "Extensão para pesquisas na central de ajuda",
-    "version": "1.0",
-    "icons": {
-      "48": "logonextfit.png"
-    },
+  "manifest_version": 3,
+  "name": "Nextfit Central",
+  "description": "Extensão para pesquisas na central de ajuda",
+  "version": "1.1",
+  "icons": {
+    "48": "logonextfit.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://www.sistemanextfit.freshchat.com/*"],
+      "js": ["script.js"],
+      "css": ["extensao.css"],
+      "run_at": "document_end"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self';",
     "content_scripts": [
       {
+        "matches": ["*://www.sistemanextfit.freshchat.com/*"],
         "js": ["script.js"],
-        "css": ["style.css"]
+        "css": ["extensao.css"],
+        "run_at": "document_end"
       }
-    ],
-    "action": {
-      "default_icon": "logonextfit.png",
-      "default_popup": "index.html"
-    },
-    "permissions": ["activeTab"]
+    ]
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": "logonextfit.png",
+    "default_popup": "index.html"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajuda.nextfit.com.br/*",
+    "webRequest",
+    "tabs"
+  ]
 }
-
-  
